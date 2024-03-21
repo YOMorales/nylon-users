@@ -48,4 +48,17 @@ class UsersController extends Controller
             return response()->json($th->getMessage());
         }
     }
+
+    public function adminDisableUser(int $userId): JsonResponse
+    {
+        try {
+            $user = User::findOrFail($userId);
+
+            $user->delete();
+
+            return response()->json('Success');
+        } catch (Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+    }
 }

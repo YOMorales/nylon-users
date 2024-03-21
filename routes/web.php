@@ -25,3 +25,5 @@ Route::get('/admin/users/list', function () {
 })->name('admin.users.list');
 
 Route::get('/admin/users/get', [UsersController::class, 'adminGetUsers'])->name('admin.users.get');
+
+Route::get('/admin/users/disable/{id}', [UsersController::class, 'adminDisableUser'])->name('admin.users.disable');

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ssn')->unique();
             $table->integer('ssn_last_four')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

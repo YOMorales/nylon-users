@@ -4,9 +4,13 @@
         @update:options="loadUsers">
 
         <template v-slot:item.actions="{ item }">
-            <a :href="`/admin/users/disable/${item.id}`" class="pa-2 bg-orange-darken-4 text-white text-decoration-none rounded">
+            <v-btn
+              type="button"
+              class="pa-2 bg-orange-darken-4 text-white text-decoration-none rounded"
+              @click="deactivateUser(item)"
+            >
                 Disable User
-            </a>
+            </v-btn>
         </template>
     </v-data-table-server>
 </template>
@@ -58,6 +62,22 @@ export default {
                     this.loading = false;
                 });
         },
+
+        deactivateUser(item) {
+            let deactivationConfirmation  = confirm('Are you sure you want to deactivate this user?');
+
+            if (deactivationConfirmation === true) {
+                axios.get(`http://localhost/admin/users/disable/${item.id}`)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((errorResponse) => {
+                        console.log(errorResponse.response.data.message);
+                    });
+            }
+
+            return false;
+        }
     },
 }
 </script>
