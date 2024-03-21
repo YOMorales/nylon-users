@@ -2,6 +2,7 @@ import './bootstrap';
 
 import { createApp } from 'vue/dist/vue.esm-bundler';
 import UserCreate from './components/UserCreate.vue';
+import UsersList from './components/UsersList.vue';
 
 
 // Vuetify
@@ -22,5 +23,6 @@ const vuetify = createVuetify({
 
 const app = createApp({});
 app.component('user-create', UserCreate);
+app.component('users-list', UsersList);
 app.use(vuetify);
 app.mount('#vue_container');

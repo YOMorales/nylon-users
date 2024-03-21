@@ -19,3 +19,9 @@ Route::get('/', function () {
 })->name('users.home');
 
 Route::post('/users/create', [UsersController::class, 'create'])->name('users.create');
+
+Route::get('/admin/users/list', function () {
+    return view('admin.users.list');
+})->name('admin.users.list');
+
+Route::get('/admin/users/get', [UsersController::class, 'adminGetUsers'])->name('admin.users.get');
