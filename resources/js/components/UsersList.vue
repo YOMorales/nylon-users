@@ -15,10 +15,10 @@
 export default {
     data: () => ({
         headers: [
-            { title: 'First Name', key: 'first_name', align: 'start', sortable: false, width: '20%' },
-            { title: 'Last Name', key: 'last_name', align: 'start', sortable: false, width: '20%' },
-            { title: 'Email', key: 'email', align: 'start', sortable: false, width: '20%' },
-            { title: 'SSN Last Four', key: 'ssn_last_four', align: 'start', sortable: false, width: '20%' },
+            { title: 'First Name', key: 'first_name', align: 'start', sortable: true, width: '20%' },
+            { title: 'Last Name', key: 'last_name', align: 'start', sortable: true, width: '20%' },
+            { title: 'Email', key: 'email', align: 'start', sortable: true, width: '20%' },
+            { title: 'SSN Last Four', key: 'ssn_last_four', align: 'start', sortable: true, width: '20%' },
             { title: '', key: 'actions', align: 'start', sortable: false, width: '20%' },
         ],
         usersPerPage: 2,
@@ -32,13 +32,18 @@ export default {
         totalUsers: 0,
     }),
     methods: {
-        loadUsers({ page, itemsPerPage }) {
+        loadUsers({ page, itemsPerPage, sortBy }) {
             this.loading = true;
 
             const params = {
                 page,
-                itemsPerPage,
+                itemsPerPage
             };
+
+            if (sortBy.length) {
+                params.sortKey = sortBy[0].key;
+                params.sortOrder = sortBy[0].order;
+            }
 
             axios.get('http://localhost/admin/users/get', { params })
                 .then((response) => {
