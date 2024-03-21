@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -30,7 +31,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Mutator for the slug attribute.
+     * Mutator for the ssn attribute.
      *
      * DEV NOTE: Laravel has a $casts attribute for encryption: https://laravel.com/docs/10.x/eloquent-mutators#encrypted-casting
      * However, I opted to manually encrypt the ssn because it's so crucial to do this, that I don't want to risk it by
@@ -42,7 +43,10 @@ class User extends Authenticatable
     {
         return Attribute::make(
             set: function (string $value) {
-                return Crypt::encryptString($value);
+                return [
+                    'ssn' => Crypt::encryptString($value),
+                    'ssn_last_four' => Str::substr($value, -4, 4),
+                ];
             },
         );
     }
