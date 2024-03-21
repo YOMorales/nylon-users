@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            // DEV NOTE: we will encrypt the ssn; still, the encrypted results should be unique
+            // (a varchar 255 column is enough for an encrypted ssn)
+            $table->string('ssn')->unique();
+            $table->integer('ssn_last_four')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

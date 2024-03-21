@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('users.home');
+
+Route::post('/users/create', [UsersController::class, 'create'])->name('users.create');
+
+Route::get('/admin/users/list', function () {
+    return view('admin.users.list');
+})->name('admin.users.list');
+
+Route::get('/admin/users/get', [UsersController::class, 'adminGetUsers'])->name('admin.users.get');
+
+Route::get('/admin/users/disable/{id}', [UsersController::class, 'adminDisableUser'])->name('admin.users.disable');
