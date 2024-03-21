@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
-            // we will encrypt the ssn; still, the encrypted results should be unique
+            // DEV NOTE: we will encrypt the ssn; still, the encrypted results should be unique
+            // (a varchar 255 column is enough for an encrypted ssn)
             $table->string('ssn')->unique();
             $table->integer('ssn_last_four')->unsigned();
             $table->timestamps();

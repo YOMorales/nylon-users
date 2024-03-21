@@ -2,25 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
-        'password',
+        'ssn',
     ];
 
     /**
@@ -29,17 +26,24 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'ssn',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Mutator for the slug attribute.
      *
-     * @var array<string, string>
+     * DEV NOTE: Laravel has a $casts attribute for encryption: https://laravel.com/docs/10.x/eloquent-mutators#encrypted-casting
+     * However, I opted to manually encrypt the ssn because it's so crucial to do this, that I don't want to risk it by
+     * having Laravel do it automatically.
+     * Putting it here brings visibility of the encryption to the developers. And it also avoids
+     * accidental/unwanted decryption (which might happen with the $casts attribute).
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected function ssn(): Attribute
+    {
+        return Attribute::make(
+            set: function (string $value) {
+                return Crypt::encryptString($value);
+            },
+        );
+    }
 }
