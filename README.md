@@ -1,66 +1,78 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Nylon Users
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Installation
 
-## About Laravel
+### Clone this repository
+`git clone git@github.com:YOMorales/nylon-users.git`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+`cd nylon-users`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Then run these commands
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+`cp .env.example .env`
+(Optional: Put a password in the DB_PASSWORD env variable if desired).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+(Optional: If your computer doesn't have php nor composer installed, run this command, which will use a small image
+to install composer dependencies. More info: https://laravel.com/docs/10.x/sail#installing-composer-dependencies-for-existing-projects)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+`composer install`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+`./vendor/bin/sail up -d`
 
-### Premium Partners
+(Before starting Sail, you should ensure that no other web servers or databases are running on your local computer).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+`./vendor/bin/sail artisan key:generate`
 
-## Contributing
+`./vendor/bin/sail npm install`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+`./vendor/bin/sail npm run dev`
 
-## Code of Conduct
+`./vendor/bin/sail artisan migrate`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Then visit these links
 
-## Security Vulnerabilities
+For the user-facing side: http://localhost/
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+For the admin page: http://localhost/admin/users/list
 
-## License
+And start playing with the form fields, the admin datatable, etc.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Developer Notes
+
+1) I'm using Laravel 10 and not 11 because Laravel 11 was released several days ago and I havent got the chance to study it.
+
+2) Securing SSNs in a real production app requires more work outside of the scope of this coding exercise. While I used a simple approach of just encrypting the SSNs in the db, more measures would be needed in a real app. For example, using TLS when transmitting them, having the database with the encrypted ssns in another secured server, using credentials and ACL to allow only a few authorized people to see the SSNs, only decrypting them 'on-demand' when necessary (and not just decrypting them all at once when rendering a list), and more.
+
+3) Speaking of security, in a real production app, I would have put login/credentials for the admin page, and also CSRF tokens.
+
+4) Again, speaking of security, bots would have a party with that form for creating users. In a real app, I would have implemented, throttling and captchas. (Or move the SSN-submission part to another page behind authentication).
+
+5) There are more frontend things that I would have implemented if given more time: a better layout, a 'mask' for the SSN field (where it have the hyphens prefilled and the user input would be guided to enter only numbers), better frontend validations and notifications (for example, to render back error messages or success messages in a nice popup notification), etc.
+
+6) I did the admin functionality in the same UsersController, but ideally, a separate Admin controller would have been better, for better segregation and encapsulation of code.
+
+7) Known bugs (which couldn't be solved due to lack of time):
+
+  * The ssn form field is supposed to have an icon for toggling the input to plain-text, but the icon is not rendering. I suspect its an issue with importing the icon set from the Vuetify libraries.
+  * After disabling a user, the admin datatable doesn't refresh by itself to show that the user was disabled. This is solved by triggering an event for the datatable component to update itself.
+  * Also, deactivating a user simply soft-deletes it and is removed from the admin datatable. This is not ideal, and a better solution is to still show the user but with a flag or indicator that it was deactivated. Finally, a button should also exist to activate the user.
+
+8) I have written a few notes in the code, explaining some decisions I made. Search for 'DEV NOTE' to find them.
+
+9) I would have added unit testing too. I love unit tests.
+
+10) I added a schema dump file in: database/schemas/nylon_db_structure.sql
