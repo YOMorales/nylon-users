@@ -34,13 +34,15 @@ docker run --rm \
 
 (Before starting Sail, you should ensure that no other web servers or databases are running on your local computer).
 
+(Also, once you have started your containers, you may connect to the MySQL instance within your application by setting your DB_HOST environment variable within your application's .env file to `mysql`.)
+
 `./vendor/bin/sail artisan key:generate`
 
 `./vendor/bin/sail npm install`
 
-`./vendor/bin/sail npm run dev`
-
 `./vendor/bin/sail artisan migrate`
+
+In a separate terminal window, run: `npm run dev`
 
 ### Then visit these links
 
